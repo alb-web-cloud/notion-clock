@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minimal Notion Clock</title>
+  <style>
+    :root{
+      --bg: #f4f8f3;
+      --text: #2f5a4c;
+      --muted: #4f635b;
+      --line: #c7dbcf;
+      --accent: #b9d7c5;
+      --shadow: 0 10px 28px rgba(40, 74, 62, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+    }
+
+    .clock-card {
+      width: min(100%, 720px);
+      background: var(--bg);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px 28px 24px;
+      text-align: center;
+    }
+
+    .time {
+      color: var(--text);
+      font-size: clamp(58px, 12vw, 112px);
+      line-height: 0.95;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 26px 0 18px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 2px;
+      flex: 1;
+      background: var(--line);
+      border-radius: 999px;
+    }
+
+    .flower {
+      width: 22px;
+      height: 22px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .petal {
+      position: absolute;
+      width: 8px;
+      height: 11px;
+      background: var(--accent);
+      border-radius: 50% 50% 45% 45%;
+      left: 7px;
+      top: 0;
+      transform-origin: 4px 11px;
+    }
+
+    .petal:nth-child(1) { transform: rotate(0deg); }
+    .petal:nth-child(2) { transform: rotate(60deg); }
+    .petal:nth-child(3) { transform: rotate(120deg); }
+    .petal:nth-child(4) { transform: rotate(180deg); }
+    .petal:nth-child(5) { transform: rotate(240deg); }
+    .petal:nth-child(6) { transform: rotate(300deg); }
+
+    .date {
+      color: var(--muted);
+      font-size: clamp(18px, 3.2vw, 30px);
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 6px; }
+      .clock-card {
+        border-radius: 20px;
+        padding: 22px 18px 18px;
+      }
+      .divider { margin: 20px 0 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="clock-card" aria-label="Current time and date">
+    <div id="time" class="time" aria-live="polite">--:--</div>
+
+    <div class="divider" aria-hidden="true">
+      <div class="flower">
+        <span class="petal"></span>
+        <span class="petal"></span>
+        <span class="petal"></span>
+        <span class="petal"></span>
+        <span class="petal"></span>
+        <span class="petal"></span>
+      </div>
+    </div>
+
+    <div id="date" class="date">Loading date…</div>
+  </main>
+
+  <script>
+    (() => {
+      const timeEl = document.getElementById("time");
+      const dateEl = document.getElementById("date");
+
+      const timeFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+
+      const dateFormatter = new Intl.DateTimeFormat(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+      function updateClock() {
+        const now = new Date();
+        timeEl.textContent = timeFormatter.format(now);
+        dateEl.textContent = dateFormatter.format(now);
+      }
+
+      updateClock();
+      const timer = setInterval(updateClock, 1000);
+
+      window.addEventListener("beforeunload", () => clearInterval(timer), { once: true });
+    })();
+  </script>
+</body>
+</html>
