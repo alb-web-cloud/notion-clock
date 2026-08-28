@@ -1,161 +1,205 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Minimal Notion Clock</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pastel Notion Clock</title>
+
   <style>
-    :root{
-      --bg: #f4f8f3;
-      --text: #2f5a4c;
-      --muted: #4f635b;
-      --line: #c7dbcf;
-      --accent: #b9d7c5;
+    * {
+      box-sizing: border-box;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
+    html,
+    body {
       margin: 0;
-      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background: transparent;
-      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      min-height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
     }
 
-    .clock-card {
-      width: min(100%, 720px);
-      background: var(--bg);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 28px 28px 24px;
-      text-align: center;
+    .clock {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 180px;
+      overflow: hidden;
+      border-radius: 24px;
+
+      background-color: #e5f3ef;
+
+      /* cream dash pattern */
+      background-image:
+        radial-gradient(
+          ellipse at center,
+          rgba(255, 248, 233, 0.95) 0 40%,
+          transparent 45%
+        );
+
+      background-size: 55px 65px;
+      background-position: 0 0;
+
+      box-shadow:
+        0 6px 18px rgba(70, 90, 85, 0.12),
+        inset 0 0 35px rgba(255,255,255,0.22);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      padding: 14px 24px;
+    }
+
+    /* decorative cream bubbles */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          circle at 40% 35%,
+          rgba(255,255,255,0.95),
+          rgba(255,246,231,0.8)
+        );
+      opacity: 0.8;
+      filter: blur(0.2px);
+    }
+
+    .bubble.one {
+      width: 115px;
+      height: 115px;
+      left: -42px;
+      bottom: -32px;
+    }
+
+    .bubble.two {
+      width: 90px;
+      height: 90px;
+      left: 38px;
+      bottom: -18px;
+    }
+
+    .bubble.three {
+      width: 76px;
+      height: 76px;
+      right: -18px;
+      top: 35px;
+    }
+
+    .bubble.four {
+      width: 92px;
+      height: 92px;
+      right: -32px;
+      top: 86px;
     }
 
     .time {
-      color: var(--text);
-      font-size: clamp(58px, 12vw, 112px);
-      line-height: 0.95;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      font-variant-numeric: tabular-nums;
-    }
+      position: relative;
+      z-index: 2;
 
-    .divider {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin: 26px 0 18px;
+      justify-content: center;
+
+      font-size: clamp(70px, 18vw, 180px);
+      font-weight: 500;
+      line-height: 0.88;
+      letter-spacing: -0.06em;
+      white-space: nowrap;
     }
 
-    .divider::before,
-    .divider::after {
-      content: "";
-      height: 2px;
-      flex: 1;
-      background: var(--line);
-      border-radius: 999px;
+    .hours {
+      color: #ff646d;
     }
 
-    .flower {
-      width: 22px;
-      height: 22px;
-      position: relative;
-      flex: 0 0 auto;
+    .colon,
+    .minutes {
+      color: #63a396;
     }
 
-    .petal {
-      position: absolute;
-      width: 8px;
-      height: 11px;
-      background: var(--accent);
-      border-radius: 50% 50% 45% 45%;
-      left: 7px;
-      top: 0;
-      transform-origin: 4px 11px;
+    .colon {
+      margin: 0 0.02em;
     }
-
-    .petal:nth-child(1) { transform: rotate(0deg); }
-    .petal:nth-child(2) { transform: rotate(60deg); }
-    .petal:nth-child(3) { transform: rotate(120deg); }
-    .petal:nth-child(4) { transform: rotate(180deg); }
-    .petal:nth-child(5) { transform: rotate(240deg); }
-    .petal:nth-child(6) { transform: rotate(300deg); }
 
     .date {
-      color: var(--muted);
-      font-size: clamp(18px, 3.2vw, 30px);
-      line-height: 1.25;
+      position: relative;
+      z-index: 2;
+
+      margin-top: 18px;
+      color: #63a396;
+
+      font-size: clamp(14px, 3.6vw, 28px);
       font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
     }
 
-    @media (max-width: 480px) {
-      body { padding: 6px; }
-      .clock-card {
-        border-radius: 20px;
-        padding: 22px 18px 18px;
+    @media (max-width: 500px) {
+      .clock {
+        border-radius: 18px;
+        padding: 10px 14px;
       }
-      .divider { margin: 20px 0 14px; }
-    }
 
-    @media (prefers-reduced-motion: reduce) {
-      * { scroll-behavior: auto !important; }
+      .date {
+        margin-top: 12px;
+        letter-spacing: 0.16em;
+      }
     }
   </style>
 </head>
-<body>
-  <main class="clock-card" aria-label="Current time and date">
-    <div id="time" class="time" aria-live="polite">--:--</div>
 
-    <div class="divider" aria-hidden="true">
-      <div class="flower">
-        <span class="petal"></span>
-        <span class="petal"></span>
-        <span class="petal"></span>
-        <span class="petal"></span>
-        <span class="petal"></span>
-        <span class="petal"></span>
-      </div>
+<body>
+  <div class="clock">
+    <div class="bubble one"></div>
+    <div class="bubble two"></div>
+    <div class="bubble three"></div>
+    <div class="bubble four"></div>
+
+    <div class="time">
+      <span class="hours" id="hours">18</span>
+      <span class="colon">:</span>
+      <span class="minutes" id="minutes">45</span>
     </div>
 
-    <div id="date" class="date">Loading date…</div>
-  </main>
+    <div class="date" id="date">
+      FRIDAY, AUGUST 28
+    </div>
+  </div>
 
   <script>
-    (() => {
-      const timeEl = document.getElementById("time");
-      const dateEl = document.getElementById("date");
+    function updateClock() {
+      const now = new Date();
 
-      const timeFormatter = new Intl.DateTimeFormat(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
 
-      const dateFormatter = new Intl.DateTimeFormat(undefined, {
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+
+      const date = new Intl.DateTimeFormat("en-CA", {
         weekday: "long",
-        year: "numeric",
         month: "long",
         day: "numeric"
-      });
+      })
+        .format(now)
+        .toUpperCase();
 
-      function updateClock() {
-        const now = new Date();
-        timeEl.textContent = timeFormatter.format(now);
-        dateEl.textContent = dateFormatter.format(now);
-      }
+      document.getElementById("date").textContent = date;
+    }
 
-      updateClock();
-      const timer = setInterval(updateClock, 1000);
-
-      window.addEventListener("beforeunload", () => clearInterval(timer), { once: true });
-    })();
+    updateClock();
+    setInterval(updateClock, 1000);
   </script>
 </body>
 </html>
