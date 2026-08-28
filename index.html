@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pastel Notion Clock</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -24,122 +22,61 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 6px;
     }
 
     .clock {
-      position: relative;
       width: 100%;
       height: 100%;
-      min-height: 180px;
-      overflow: hidden;
-      border-radius: 24px;
-
-      background-color: #e5f3ef;
-
-      /* cream dash pattern */
-      background-image:
-        radial-gradient(
-          ellipse at center,
-          rgba(255, 248, 233, 0.95) 0 40%,
-          transparent 45%
-        );
-
-      background-size: 55px 65px;
-      background-position: 0 0;
-
-      box-shadow:
-        0 6px 18px rgba(70, 90, 85, 0.12),
-        inset 0 0 35px rgba(255,255,255,0.22);
+      min-height: 150px;
 
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
 
-      padding: 14px 24px;
-    }
+      padding: 12px 20px;
 
-    /* decorative cream bubbles */
-    .bubble {
-      position: absolute;
-      border-radius: 50%;
-      background:
-        radial-gradient(
-          circle at 40% 35%,
-          rgba(255,255,255,0.95),
-          rgba(255,246,231,0.8)
-        );
-      opacity: 0.8;
-      filter: blur(0.2px);
-    }
+      /* Pastel mint background */
+      background: #e5f3ef;
 
-    .bubble.one {
-      width: 115px;
-      height: 115px;
-      left: -42px;
-      bottom: -32px;
-    }
-
-    .bubble.two {
-      width: 90px;
-      height: 90px;
-      left: 38px;
-      bottom: -18px;
-    }
-
-    .bubble.three {
-      width: 76px;
-      height: 76px;
-      right: -18px;
-      top: 35px;
-    }
-
-    .bubble.four {
-      width: 92px;
-      height: 92px;
-      right: -32px;
-      top: 86px;
+      border-radius: 22px;
     }
 
     .time {
-      position: relative;
-      z-index: 2;
-
       display: flex;
       align-items: center;
       justify-content: center;
 
       font-size: clamp(70px, 18vw, 180px);
       font-weight: 500;
-      line-height: 0.88;
+      line-height: 0.9;
       letter-spacing: -0.06em;
       white-space: nowrap;
     }
 
+    /* Coral hours */
     .hours {
       color: #ff646d;
     }
 
+    /* Teal colon + minutes */
     .colon,
     .minutes {
       color: #63a396;
     }
 
     .colon {
-      margin: 0 0.02em;
+      margin: 0 0.03em;
     }
 
     .date {
-      position: relative;
-      z-index: 2;
+      margin-top: 16px;
 
-      margin-top: 18px;
       color: #63a396;
-
-      font-size: clamp(14px, 3.6vw, 28px);
+      font-size: clamp(14px, 3.4vw, 27px);
       font-weight: 500;
-      letter-spacing: 0.25em;
+
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       text-align: center;
       white-space: nowrap;
@@ -147,24 +84,21 @@
 
     @media (max-width: 500px) {
       .clock {
-        border-radius: 18px;
-        padding: 10px 14px;
+        border-radius: 16px;
+        padding: 10px;
       }
 
       .date {
-        margin-top: 12px;
-        letter-spacing: 0.16em;
+        margin-top: 10px;
+        letter-spacing: 0.14em;
       }
     }
   </style>
 </head>
 
 <body>
+
   <div class="clock">
-    <div class="bubble one"></div>
-    <div class="bubble two"></div>
-    <div class="bubble three"></div>
-    <div class="bubble four"></div>
 
     <div class="time">
       <span class="hours" id="hours">18</span>
@@ -175,23 +109,28 @@
     <div class="date" id="date">
       FRIDAY, AUGUST 28
     </div>
+
   </div>
 
   <script>
     function updateClock() {
       const now = new Date();
 
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const hours =
+        now.getHours().toString().padStart(2, "0");
+
+      const minutes =
+        now.getMinutes().toString().padStart(2, "0");
 
       document.getElementById("hours").textContent = hours;
       document.getElementById("minutes").textContent = minutes;
 
-      const date = new Intl.DateTimeFormat("en-CA", {
-        weekday: "long",
-        month: "long",
-        day: "numeric"
-      })
+      const date =
+        new Intl.DateTimeFormat("en-CA", {
+          weekday: "long",
+          month: "long",
+          day: "numeric"
+        })
         .format(now)
         .toUpperCase();
 
@@ -199,7 +138,9 @@
     }
 
     updateClock();
+
     setInterval(updateClock, 1000);
   </script>
+
 </body>
 </html>
