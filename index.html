@@ -36,9 +36,7 @@
 
       padding: 12px 20px;
 
-      /* Pastel mint background */
       background: #e6f3ec80;
-
       border-radius: 22px;
     }
 
@@ -52,16 +50,6 @@
       line-height: 0.9;
       letter-spacing: -0.06em;
       white-space: nowrap;
-    }
-
-    /* Coral hours */
-    .hours {
-      color: #058686;
-    }
-
-    /* Teal colon + minutes */
-    .colon,
-    .minutes {
       color: #058686;
     }
 
@@ -79,7 +67,11 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       text-align: center;
-      white-space: nowrap;
+      line-height: 1.35;
+    }
+
+    .date-line {
+      display: block;
     }
 
     @media (max-width: 500px) {
@@ -101,14 +93,14 @@
   <div class="clock">
 
     <div class="time">
-      <span class="hours" id="hours">18</span>
+      <span id="hours">18</span>
       <span class="colon">:</span>
-      <span class="minutes" id="minutes">45</span>
+      <span id="minutes">45</span>
     </div>
 
-    <div class="date" id="date">
-      FRIDAY
-      AUGUST 28
+    <div class="date">
+      <span class="date-line" id="weekday">FRIDAY</span>
+      <span class="date-line" id="month-day">AUGUST 28</span>
     </div>
 
   </div>
@@ -117,29 +109,29 @@
     function updateClock() {
       const now = new Date();
 
-      const hours =
+      document.getElementById("hours").textContent =
         now.getHours().toString().padStart(2, "0");
 
-      const minutes =
+      document.getElementById("minutes").textContent =
         now.getMinutes().toString().padStart(2, "0");
 
-      document.getElementById("hours").textContent = hours;
-      document.getElementById("minutes").textContent = minutes;
-
-      const date =
+      document.getElementById("weekday").textContent =
         new Intl.DateTimeFormat("en-CA", {
-          weekday: "long",
+          weekday: "long"
+        })
+        .format(now)
+        .toUpperCase();
+
+      document.getElementById("month-day").textContent =
+        new Intl.DateTimeFormat("en-CA", {
           month: "long",
           day: "numeric"
         })
         .format(now)
         .toUpperCase();
-
-      document.getElementById("date").textContent = date;
     }
 
     updateClock();
-
     setInterval(updateClock, 1000);
   </script>
 
